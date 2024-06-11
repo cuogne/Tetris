@@ -181,8 +181,12 @@ const BRICK_LAYOUT = [
 const KEY_CODES = {
   LEFT: 'ArrowLeft',
   RIGHT: 'ArrowRight',
-  UP: 'ArrowUp',
   DOWN: 'ArrowDown',
+  UP: 'ArrowUp',
+  A: 'KeyA',
+  W: 'KeyW',
+  S: 'KeyS',
+  D: 'KeyD'
 };
 
 const WHITE_COLOR_ID = 7;
@@ -467,15 +471,19 @@ document.addEventListener('keydown', (e) => {
     console.log({ e });
     switch (e.code) {
       case KEY_CODES.LEFT:
+      case KEY_CODES.A:
         brick.moveLeft();
         break;
       case KEY_CODES.RIGHT:
+      case KEY_CODES.D:
         brick.moveRight();
         break;
       case KEY_CODES.DOWN:
+      case KEY_CODES.S:
         brick.moveDown();
         break;
       case KEY_CODES.UP:
+      case KEY_CODES.W:
         brick.rotate();
         break;
       default:
