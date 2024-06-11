@@ -413,25 +413,54 @@ function generateNewBrick() {
   brick = new Brick(Math.floor(Math.random() * 10) % BRICK_LAYOUT.length); // tao ra 1 id bat ki nam tu 0 -> 6
 }
 
+let time = 0;
+let timer;
+
+function startTimer() {
+  clearInterval(timer); // Dừng đồng hồ nếu nó đang chạy
+  time = 0; // Reset thời gian
+  document.getElementById('time').textContent = formatTime(time); // Cập nhật thời gian trên giao diện
+
+  timer = setInterval(() => {
+    time++;
+    document.getElementById('time').textContent = formatTime(time);
+  }, 1000);
+}
+
+function formatTime(time) {
+  const minutes = Math.floor(time / 60);
+  const seconds = time % 60;
+  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
 board = new Board(ctx);
 board.drawBoard();
 
+let refresh;
+
 document.getElementById('play').addEventListener('click', () => {
   board.reset();
-
   board.isPlaying = true;
+  startTimer();
   
   generateNewBrick();
 
-  const refresh = setInterval(() => {
-    if (!board.gameOver) {
+  refresh = setInterval(() => {
+    if (!board.gameOver && board.isPlaying) {
       brick.moveDown();
-    } else {
+    } else if (board.gameOver) {
       clearInterval(refresh);
     }
   }, 1000);
 })
 
+document.getElementById('pause').addEventListener('click', () => {
+  board.isPlaying = !board.isPlaying;
+  if (!board.isPlaying) {
+    clearInterval(timer); // Dừng đồng hồ
+    alert('Game paused. Press pause again to continue.');
+  }
+});
 
 document.addEventListener('keydown', (e) => {
   if (!board.gameOver && board.isPlaying) {
