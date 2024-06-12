@@ -183,10 +183,10 @@ const KEY_CODES = {
   RIGHT: 'ArrowRight',
   DOWN: 'ArrowDown',
   UP: 'ArrowUp',
-  A: 'KeyA',
-  W: 'KeyW',
-  S: 'KeyS',
-  D: 'KeyD'
+  A: 'a',
+  W: 'w',
+  S: 's',
+  D: 'd'
 };
 
 const WHITE_COLOR_ID = 7;
@@ -421,9 +421,9 @@ let time = 0;
 let timer;
 
 function startTimer() {
-  clearInterval(timer); // Dừng đồng hồ nếu nó đang chạy
-  time = 0; // Reset thời gian
-  document.getElementById('time').textContent = formatTime(time); // Cập nhật thời gian trên giao diện
+  clearInterval(timer); 
+  time = 0; 
+  document.getElementById('time').textContent = formatTime(time); 
 
   timer = setInterval(() => {
     time++;
@@ -445,31 +445,67 @@ let refresh;
 document.getElementById('play').addEventListener('click', () => {
   board.reset();
   board.isPlaying = true;
+  board.gameOver = false;  // Reset game over state
+  time = 0;
+  document.getElementById('time').textContent = formatTime(time);
+
+  if (refresh) {
+    clearInterval(refresh);
+  }
+  if (timer) {
+    clearInterval(timer);
+  }
+
   startTimer();
-  
+
   generateNewBrick();
 
   refresh = setInterval(() => {
     if (!board.gameOver && board.isPlaying) {
       brick.moveDown();
-    } else if (board.gameOver) {
+    } else {
       clearInterval(refresh);
+      clearInterval(timer);
     }
   }, 1000);
-})
+});
 
 document.getElementById('pause').addEventListener('click', () => {
+  if (board.gameOver) {
+    alert('Game over. Click Play to Play again !');
+    return;
+  }
+
   board.isPlaying = !board.isPlaying;
+  
   if (!board.isPlaying) {
-    clearInterval(timer); // Dừng đồng hồ
+    clearInterval(timer);
+    clearInterval(refresh);
     alert('Game paused. Press pause again to continue.');
+  } 
+  else {
+
+    timer = setInterval(() => {
+      time++;
+      document.getElementById('time').textContent = formatTime(time);
+    }, 1000);
+
+    refresh = setInterval(() => {
+      if (!board.gameOver && board.isPlaying) {
+        brick.moveDown();
+      } 
+      else if (board.gameOver) {
+        clearInterval(refresh);
+        clearInterval(timer);
+      }
+    }, 1000);
   }
 });
 
 document.addEventListener('keydown', (e) => {
   if (!board.gameOver && board.isPlaying) {
     console.log({ e });
-    switch (e.code) {
+    switch (e.key) {
       case KEY_CODES.LEFT:
       case KEY_CODES.A:
         brick.moveLeft();
