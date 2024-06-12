@@ -268,6 +268,11 @@ class Board {
     document.getElementById('score').innerHTML = this.score;
   }
 
+  resetScore() {
+    this.score = 0;
+    document.getElementById('score').innerHTML = this.score;
+  }
+
   handleGameOver() {
     this.gameOver = true;
     this.isPlaying = false;
@@ -444,6 +449,7 @@ let refresh;
 
 document.getElementById('play').addEventListener('click', () => {
   board.reset();
+  board.resetScore(); // reset score = 0 after play again
   board.isPlaying = true;
   board.gameOver = false;  // Reset game over state
   time = 0;
@@ -497,6 +503,7 @@ document.getElementById('pause').addEventListener('click', () => {
       else if (board.gameOver) {
         clearInterval(refresh);
         clearInterval(timer);
+        game.resetScore();
       }
     }, 1000);
   }
