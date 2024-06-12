@@ -379,22 +379,22 @@ class Brick {
   }
 
   checkCollision(nextRow, nextCol, nextLayout) {
-    // if (nextCol < 0) return true;
-
     for (let row = 0; row < nextLayout.length; row++) {
       for (let col = 0; col < nextLayout[0].length; col++) {
-        if (nextLayout[row][col] !== WHITE_COLOR_ID && nextRow >= 0) {
+        if (nextLayout[row][col] !== WHITE_COLOR_ID) {
           if (
-            col + nextCol < 0 ||
-            col + nextCol >= COLS ||
-            row + nextRow >= ROWS ||
-            board.grid[row+nextRow][col+nextCol] !== WHITE_COLOR_ID
+            col + nextCol < 0 || 
+            col + nextCol >= COLS || 
+            (nextRow >= 0 && (  // check
+              row + nextRow >= ROWS || 
+              board.grid[row+nextRow][col+nextCol] !== WHITE_COLOR_ID 
+            ))
           )
             return true;
         }
       }
     }
-
+  
     return false;
   }
 
@@ -451,7 +451,7 @@ document.getElementById('play').addEventListener('click', () => {
   board.reset();
   board.resetScore(); // reset score = 0 after play again
   board.isPlaying = true;
-  board.gameOver = false;  // Reset game over state
+  board.gameOver = false; 
   time = 0;
   document.getElementById('time').textContent = formatTime(time);
 
